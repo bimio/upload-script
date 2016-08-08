@@ -1,7 +1,7 @@
 {
   "name": "BIMserverWrapper",
   "version": "0.0.1",
-  "description": "a package to require dependencies for repo",
+  "description": "",
   "main": "createproject.js",
   "scripts": {
     "test": "none"
