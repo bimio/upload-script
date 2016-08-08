@@ -1,7 +1,7 @@
 var needle = require('needle');
 var prompt = require('prompt');
 var _ = require('lodash');
-fs = require('fs');
+var fs = require('fs');
 
 var outputDir = process.argv[2];
 var bimserver = process.argv[3];
@@ -29,7 +29,7 @@ var download = function(rev, token, colladaSerializer, callback) {
       }
     }
   };
-  
+
   // Download revision
   needle.post(bimserver + '/json', downloadRevisionData, options, function(err, resp) {
     if (err) {
@@ -49,7 +49,8 @@ var download = function(rev, token, colladaSerializer, callback) {
     };
 
     needle.post(bimserver + '/json', downloadResultData, options, function(err, resp) {
-      var fileData = resp.body.response.result.file;
+
+      var fileData = resp.body.response.result.file; //initial error found
       var fileString = new Buffer(fileData, 'base64');
 
       fs.writeFile(outputDir + '/' + rev.oid + '.dae', fileString, function(err) {
@@ -65,11 +66,11 @@ var download = function(rev, token, colladaSerializer, callback) {
 //
 
 //prompt.get(['username', 'password'], function (err, result) {
-  
-  var loginData = { 
+
+  var loginData = {
     "request": {
-      "interface": "Bimsie1AuthInterface", 
-      "method": "login", 
+      "interface": "Bimsie1AuthInterface",
+      "method": "login",
       "parameters": {
         "username": username,
         "password": password
@@ -85,8 +86,8 @@ var download = function(rev, token, colladaSerializer, callback) {
     var getProjectsData = {
       "token": token,
       "request": {
-        "interface": "Bimsie1ServiceInterface", 
-        "method": "getAllProjects", 
+        "interface": "Bimsie1ServiceInterface",
+        "method": "getAllProjects",
         "parameters": {
           "onlyTopLevel": "false",
           "onlyActive": "false"
@@ -106,7 +107,7 @@ var download = function(rev, token, colladaSerializer, callback) {
       prompt.get(['project'], function(err, result) {
         var project = projects[result.project];
 
-        var colladaSerializerData = { 
+        var colladaSerializerData = {
           "token": token,
           "request": {
             "interface": "Bimsie1ServiceInterface",
@@ -117,7 +118,7 @@ var download = function(rev, token, colladaSerializer, callback) {
 
         // Get collada serializer
         needle.post(bimserver + '/json', colladaSerializerData, options, function(err, resp) {
-          var colladaSerializer = resp.body.response.result;  
+          var colladaSerializer = resp.body.response.result;
           console.log("colladaSerializer", colladaSerializer);
           // check which revisions are already there
 
@@ -135,7 +136,7 @@ var download = function(rev, token, colladaSerializer, callback) {
 
             needle.post(bimserver + '/json', getAllRevisionsData, options, function(err, resp) {
               var revisions = resp.body.response.result;
-              
+
               var toDownload = revisions.filter(function(rev) {
                 return existingRoids.indexOf(parseInt(rev.oid, 10)) === -1;
                 //return !(parseInt(rev.oid, 10) in existingRoids);

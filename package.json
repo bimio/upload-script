@@ -1,0 +1,23 @@
+{
+  "name": "BIMserverWrapper",
+  "version": "0.0.1",
+  "description": "",
+  "main": "createproject.js",
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bimio/upload-script"
+  },
+  "keywords": [
+    "BIMserver"
+  ],
+  "author": "bigdoods",
+  "license": "MIT",
+  "dependencies": {
+    "needle": "~1.0.0",
+    "prompt": "~1.0.0",
+    "lodash": "~4.14.1"
+  }
+}

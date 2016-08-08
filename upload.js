@@ -1,7 +1,7 @@
 var needle = require('needle');
 var prompt = require('prompt');
 var _ = require('lodash');
-fs = require('fs');
+var fs = require('fs');
 
 var filePath = process.argv[2];
 var bimserver = process.argv[3];
@@ -16,11 +16,11 @@ var options = {
 //
 
 //prompt.get(['username', 'password'], function (err, result) {
-  
-  var loginData = { 
+
+  var loginData = {
     "request": {
-      "interface": "Bimsie1AuthInterface", 
-      "method": "login", 
+      "interface": "Bimsie1AuthInterface",
+      "method": "login",
       "parameters": {
         "username": username,
         "password": password
@@ -34,8 +34,8 @@ var options = {
     var getProjectsData = {
       "token": token,
       "request": {
-        "interface": "Bimsie1ServiceInterface", 
-        "method": "getAllProjects", 
+        "interface": "Bimsie1ServiceInterface",
+        "method": "getAllProjects",
         "parameters": {
           "onlyTopLevel": "false",
           "onlyActive": "false"
@@ -55,7 +55,7 @@ var options = {
       prompt.get(['project'], function(err, result) {
         var project = projects[result.project];
 
-        var ifcDeserializerData = { 
+        var ifcDeserializerData = {
           "token": token,
           "request": {
             "interface": "Bimsie1ServiceInterface",
@@ -72,7 +72,9 @@ var options = {
           var fileName = pathSplit[pathSplit.length - 1];
 
           fs.readFile(filePath, function(err, data) {
-            var encodedFileData = new Buffer(data).toString('base64');
+            if (err) throw err;
+            var encodedFileData = new Buffer(data).toString('base64'); //data
+
             var newRevisionData = {
               "token": token,
               "request": {
@@ -88,7 +90,7 @@ var options = {
                   "sync": "true"
                 }
               }
-            };
+          };
 
             // Upload revision to project
             needle.post(bimserver + '/json', newRevisionData, options, function(err, resp) {
